@@ -1,6 +1,6 @@
 # u\_ Autofill
 
-Script automatically "u\_" to an input box.
+Script automatically "u\_"
 
 ## Description
 
@@ -17,6 +17,7 @@ Script automatically "u\_" to an input box.
 
 ## Script
 
+```javascript
 // ==UserScript==
 // @name Autofill u*
 // @version 1.0
@@ -25,25 +26,29 @@ Script automatically "u\_" to an input box.
 // ==/UserScript==
 
 (function () {
-"use strict";
+  "use strict";
 
-function ensurePrefix() {
-var inputBox = document.querySelector("#\__next > section > section > main > div > div > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > span > span > input");
-if (inputBox && !inputBox.value.startsWith("u_")) {
-inputBox.value = "u\_" + inputBox.value;
-}
-}
+  // Set prefix text
+  const PREFIX = "u_";
 
-ensurePrefix();
-setInterval(ensurePrefix, 500);
+  function ensurePrefix() {
+    var inputBox = document.querySelector("#__next > section > section > main > div > div > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > span > span > input");
+    if (inputBox && !inputBox.value.startsWith(PREFIX)) {
+      inputBox.value = PREFIX + inputBox.value;
+    }
+  }
 
-document.addEventListener(
-"focus",
-function (e) {
-if (e.target === document.querySelector("#\_\_next > section > section > main > div > div > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > span > span > input")) {
-ensurePrefix();
-}
-},
-true
-);
+  ensurePrefix();
+  setInterval(ensurePrefix, 500);
+
+  document.addEventListener(
+    "focus",
+    function (e) {
+      if (e.target === document.querySelector("#__next > section > section > main > div > div > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > span > span > input")) {
+        ensurePrefix();
+      }
+    },
+    true
+  );
 })();
+```
