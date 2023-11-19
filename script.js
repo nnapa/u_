@@ -3,6 +3,7 @@
 // @version      1.1
 // @description  Automatically fill in the input box with custom prefix
 // @match        www.www.www
+// @grant        GM_addStyle
 // ==/UserScript==
 
 (function () {
@@ -10,32 +11,53 @@
 
   // Set prefix text
   const PREFIX = "u_";
-
   const SELECTOR = "#__next > section > section > main > div > div > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > span > span > input";
-  let lastValue = "";
+  const STORAGE_KEY = "toggleScriptEnabled";
+  let scriptEnabled = localStorage.getItem(STORAGE_KEY) === null ? true : localStorage.getItem(STORAGE_KEY) === "true";
 
-  function ensurePrefix() {
-    const inputBox = document.querySelector(SELECTOR);
-    if (inputBox && !inputBox.value.startsWith(PREFIX)) {
-      inputBox.value = PREFIX + inputBox.value;
-      lastValue = inputBox.value;
+  GM_addStyle(`
+  .toggle-button {
+      position: fixed;
+      top: 16px;
+      right: 120px;
+      background-color: #1890ff;
+      color: #fff;
+      border: none;
+      height: 32px;
+      padding: 4px 15px;
+      font-size: 14px;
+      cursor: pointer;
+      z-index: 1000;
+      transition: background-color 0.3s;
+  }
+  .toggle-button:hover {
+      background-color: #40a9ff;
+  }
+  .toggle-button:active {
+      background-color: #1a6dd9;
+  }
+`);
+
+  function updateInputValue(inputBox) {
+    if (scriptEnabled) {
+      let valueWithoutPrefix = inputBox.value.replace(new RegExp(`^${PREFIX}|(?<!^)${PREFIX}`, "g"), "");
+      inputBox.value = PREFIX + valueWithoutPrefix;
     }
   }
 
-  function checkInputExistence() {
-    const inputBox = document.querySelector(SELECTOR);
-    if (inputBox && inputBox.value !== lastValue) {
-      ensurePrefix();
-    }
+  function setupEventListeners(inputBox) {
+    inputBox.addEventListener("input", function () {
+      setTimeout(() => updateInputValue(inputBox), 0);
+    });
   }
 
-  document.addEventListener("focusin", function (event) {
-    if (event.target.matches(SELECTOR)) {
-      ensurePrefix();
+  setInterval(function () {
+    const inputBox = document.querySelector(SELECTOR);
+    if (inputBox) {
+      updateInputValue(inputBox);
+      setupEventListeners(inputBox);
     }
-  });
+  }, 1000);
 
-  setInterval(checkInputExistence, 500);
-
-  ensurePrefix();
+  createToggleButton();
 })();
