@@ -1,10 +1,10 @@
 # u\_ Autofill
 
-Script automatically "u\_"
+Script auto prefix
 
 ## Description
 
-1. Script ensures that the input box always starts with "u\_".
+1. Script ensures that the input box always starts with set prefix.
 2. Script should work with dynamically loaded content, will reapply the prefix if it's removed.
 
 ## Installation
