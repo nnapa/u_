@@ -40,7 +40,12 @@
 
   function updateInputValue(inputBox) {
     if (scriptEnabled) {
-      let valueWithoutPrefix = inputBox.value.replace(new RegExp(`^${PREFIX}|(?<!^)${PREFIX}`, "g"), "");
+      let currentValue = inputBox.value;
+      let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (emailRegex.test(currentValue)) {
+        return;
+      }
+      let valueWithoutPrefix = currentValue.replace(new RegExp(`^${PREFIX}|(?<!^)${PREFIX}`, "g"), "");
       inputBox.value = PREFIX + valueWithoutPrefix;
     }
   }
